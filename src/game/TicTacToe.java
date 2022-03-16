@@ -23,23 +23,23 @@ public class TicTacToe {
 
     public static void main(String[] args) throws ParserConfigurationException, TransformerException, IOException, SAXException {
 
-//        HashMap<String, Integer> players = new HashMap<>();
-//        System.out.println("Начинаем игру!");
-//        System.out.println("Введите ваше имя для хода крестиком: ");
-//        String player1 = scanner.nextLine();
-//
-//        System.out.println("Введите ваше имя для хода ноликом: ");
-//        String player2 = scanner.nextLine();
-//
-//        fillOfList();
-//
-//        players.put(player1, 0);
-//        players.put(player2, 0);
-//
-//        playStart(player1, player2, players);
-//        playAgain(player1, player2, players);
-//
-//        XMLWriter.write(player1, player2, steps, playerWinner);
+        HashMap<String, Integer> players = new HashMap<>();
+        System.out.println("Начинаем игру!");
+        System.out.println("Введите ваше имя для хода крестиком: ");
+        String player1 = scanner.nextLine();
+
+        System.out.println("Введите ваше имя для хода ноликом: ");
+        String player2 = scanner.nextLine();
+
+        fillOfList();
+
+        players.put(player1, 0);
+        players.put(player2, 0);
+
+        playStart(player1, player2, players);
+        playAgain(player1, player2, players);
+
+        XMLWriter.write(player1, player2, steps, playerWinner);
 
         XMLReader.readXML();
 
@@ -70,11 +70,19 @@ public class TicTacToe {
                 //повторяем попытку хода
                 continue;
             }
+
             //совершаем ход
             field[x][y] = isCrossTurn ? CROSS : ZERO;
             count++;
+
+            if (isDraw(field)) {
+                System.out.println("Ничья!");
+                playerWinner = new String[]{" не выиграл никто ", "дружба", "!" };
+                break;
+            }
             if (isWin(field, isCrossTurn ? CROSS : ZERO)) {
                 System.out.println("Выиграл " + (isCrossTurn ? player1 : player2) + "!");
+
                 if (isCrossTurn) {
                     players.put(player1, players.get(player1) + 1);
                     playerWinner = new String[]{"1", player1, "X"};
@@ -82,6 +90,7 @@ public class TicTacToe {
                     players.put(player2, players.get(player2) + 1);
                     playerWinner = new String[]{"2", player2, "0"};
                 }
+
                 printField(field);
                 //завершаем игру
                 break;
@@ -152,5 +161,13 @@ public class TicTacToe {
         for (int i = 0; i < SIZE_FIELD; i++) {
             steps.add("-");
         }
+    }
+
+    public static boolean isDraw(char[][] field) {
+        for (int row = 0; row < 3; row++)
+            for (int col = 0; col < 3; col++)
+                if (field[row][col] == EMPTY)
+                    return false;
+        return true;
     }
 }
